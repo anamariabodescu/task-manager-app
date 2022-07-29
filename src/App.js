@@ -1,13 +1,15 @@
+import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment-timezone";
 import "moment-timezone";
-import "./App.scss";
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
 import TaskList from "./components/TaskList/TaskList";
 import AddTask from "./components/AddTask/AddTask";
 import EditTask from "./components/EditTask/EditTask";
+import ErrorPage from "./components/ErrorPage/ErrorPage";
+import "./App.scss";
 
 function App() {
   const [task, setTask] = useState({
@@ -30,6 +32,7 @@ function App() {
   const [taskList, setTaskList] = useState(getTaskListFromLocalStorage());
   const [isEditing, setIsEditing] = useState(false);
   const [currentTaskItem, setCurrentTaskItem] = useState({});
+  const navigate = useNavigate();
 
   const addNewTask = (title, description, priority) => {
     const newTask = {
@@ -56,6 +59,7 @@ function App() {
     });
     setTaskList(updatedList);
     setIsEditing(false);
+    navigate("/task-list");
   };
 
   const deleteTask = (taskId) => {
@@ -65,6 +69,7 @@ function App() {
   const handleEditClick = (task) => {
     setIsEditing(true);
     setCurrentTaskItem({ ...task });
+    navigate("/edit-task/" + task.id);
   };
 
   const changeTaskStatus = (taskId) => {
@@ -89,31 +94,53 @@ function App() {
   }, [taskList]);
 
   return (
-    <div className="task-manager">
-      <Header />
-      <div className="task-manager__body">
-        <div className="task-manager__body__left-column">
-          <Navbar />
-        </div>
-        <div className="task-manager__body__right-column">
-          <AddTask task={task} setTask={setTask} addNewTask={addNewTask} />
-          <TaskList
-            taskList={taskList}
-            setTaskList={setTaskList}
-            handleEditClick={handleEditClick}
-            deleteTask={deleteTask}
-            changeTaskStatus={changeTaskStatus}
-          />
-          {isEditing && (
-            <EditTask
-              currentTaskItem={currentTaskItem}
-              setCurrentTaskItem={setCurrentTaskItem}
-              editTask={editTask}
-            />
-          )}
+    <>
+      <div className="task-manager">
+        <Header />
+        <div className="task-manager__body">
+          <div className="task-manager__body__left-column">
+            <Navbar />
+          </div>
+          <div className="task-manager__body__right-column">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <AddTask
+                    task={task}
+                    setTask={setTask}
+                    addNewTask={addNewTask}
+                  />
+                }
+              />
+              <Route
+                path="/task-list"
+                element={
+                  <TaskList
+                    taskList={taskList}
+                    setTaskList={setTaskList}
+                    handleEditClick={handleEditClick}
+                    deleteTask={deleteTask}
+                    changeTaskStatus={changeTaskStatus}
+                  />
+                }
+              />
+              <Route
+                path="/edit-task/:taskId"
+                element={
+                  <EditTask
+                    currentTaskItem={currentTaskItem}
+                    setCurrentTaskItem={setCurrentTaskItem}
+                    editTask={editTask}
+                  />
+                }
+              />
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

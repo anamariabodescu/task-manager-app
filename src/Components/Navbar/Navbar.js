@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Navbar.scss";
 
 export default function Navbar() {
@@ -6,10 +7,10 @@ export default function Navbar() {
     <>
       <ul className="navbar-list">
         <li className="navbar-list___list-item">
-          <a>Task List</a>
+          <Link to="task-list">Task List</Link>
         </li>
         <li className="navbar-list___list-item">
-          <a>Create new task</a>
+          <Link to="/">Create new task</Link>
         </li>
       </ul>
     </>
