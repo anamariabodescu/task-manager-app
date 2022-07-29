@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default function EditTask({
   currentTask,
@@ -53,3 +54,15 @@ export default function EditTask({
     </form>
   );
 }
+
+EditTask.defaultProps = {
+  task: {
+    createdBy: "Ana",
+  },
+};
+
+EditTask.propTypes = {
+  currentTask: PropTypes.object,
+  setCurrentTask: PropTypes.func,
+  updateTasksList: PropTypes.func,
+};

@@ -47,18 +47,14 @@ export default function Task({
 }
 
 Task.defaultProps = {
-  TaskItem: {
-    id: "",
-    createdAt: null,
+  task: {
     createdBy: "Ana",
-    title: "",
-    description: "",
-    priority: null,
-    completed: false,
-    completedAt: null,
   },
 };
 
 Task.propTypes = {
   task: PropTypes.object,
+  handleEditClick: PropTypes.func,
+  deleteTask: PropTypes.func,
+  changeTaskStatus: PropTypes.func,
 };

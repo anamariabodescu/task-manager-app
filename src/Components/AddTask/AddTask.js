@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment-timezone";
-import PropTypes from "prop-types";
 import { FaPlusCircle } from "react-icons/fa";
+
 import "moment-timezone";
 import "./AddTask.scss";
 
-function AddTask({ addNewTask }) {
+export default function AddTask({ addNewTask }) {
   const [task, setTask] = useState({
     id: null,
     createdAt: null,
@@ -89,21 +91,12 @@ function AddTask({ addNewTask }) {
 
 AddTask.defaultProps = {
   task: {
-    id: "",
-    createdAt: null,
     createdBy: "Ana",
-    title: "",
-    description: "",
-    priority: null,
     completed: false,
     completedAt: null,
   },
 };
 
 AddTask.propTypes = {
-  task: PropTypes.object,
-  setTask: PropTypes.func,
   addNewTask: PropTypes.func,
 };
-
-export default AddTask;

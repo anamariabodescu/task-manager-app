@@ -43,10 +43,9 @@ export default function TasksList({
   );
 }
 
-TasksList.defaultProps = {
-  tasksList: [],
-};
-
 Task.propTypes = {
   tasksList: PropTypes.array,
+  handleEditClick: PropTypes.func,
+  deleteTask: PropTypes.func,
+  changeTaskStatus: PropTypes.func,
 };
