@@ -1,53 +1,53 @@
 import React from "react";
 
 export default function EditTask({
-  currentTaskItem,
-  setCurrentTaskItem,
-  editTask,
+  currentTask,
+  setCurrentTask,
+  updateTasksList,
 }) {
-  console.log(currentTaskItem);
+  console.log(currentTask);
 
-  const handleEditFormSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    editTask(currentTaskItem.id, currentTaskItem);
+    updateTasksList(currentTask);
   };
 
   const handleInputChange = (e) => {
-    setCurrentTaskItem({
-      ...currentTaskItem,
+    setCurrentTask({
+      ...currentTask,
       [e.target.name]: e.target.value,
     });
   };
 
   return (
-    <form className="task-input-container" onSubmit={handleEditFormSubmit}>
+    <form className="task-form" onSubmit={handleFormSubmit}>
       <input
         type="text"
-        value={currentTaskItem.title}
+        value={currentTask.title}
         name="title"
         placeholder="Add title.."
-        className="task-input-container__input-text"
+        className="task-form__input-text"
         onChange={handleInputChange}
       ></input>
       <input
         type="text"
-        value={currentTaskItem.description}
+        value={currentTask.description}
         name="description"
         placeholder="Add description.."
-        className="task-input-container__input-text"
+        className="task-form__input-text"
         onChange={handleInputChange}
       ></input>
       <select
         name="priority"
-        className="task-input-container__input-text"
-        value={currentTaskItem.priority}
+        className="task-form__input-text"
+        value={currentTask.priority}
         onChange={handleInputChange}
       >
         <option value="1">High</option>
         <option value="2">Medium</option>
         <option value="3">Low</option>
       </select>
-      <button type="submit" className="task-input-container__submit-button">
+      <button type="submit" className="task-form__submit-button">
         Update
       </button>
     </form>

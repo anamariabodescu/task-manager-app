@@ -1,11 +1,10 @@
-import TaskItem from "./TaskItem/TaskItem";
+import Task from "./Task/Task";
 import PropTypes from "prop-types";
 
-import "./TaskList.scss";
+import "./TasksList.scss";
 
-export default function TaskList({
-  taskList,
-  setTaskList,
+export default function TasksList({
+  tasksList,
   handleEditClick,
   deleteTask,
   changeTaskStatus,
@@ -26,14 +25,11 @@ export default function TaskList({
           </tr>
         </thead>
         <tbody className="tasks-list__body">
-          {taskList.map((taskItem) => {
+          {tasksList.map((task) => {
             return (
-              <tr
-                key={taskItem.id + "-" + taskItem.title}
-                className="tasks-list__row"
-              >
-                <TaskItem
-                  taskItem={taskItem}
+              <tr key={task.id + "-" + task.title} className="tasks-list__row">
+                <Task
+                  task={task}
                   handleEditClick={handleEditClick}
                   deleteTask={deleteTask}
                   changeTaskStatus={changeTaskStatus}
@@ -47,10 +43,10 @@ export default function TaskList({
   );
 }
 
-TaskList.defaultProps = {
-  taskList: [],
+TasksList.defaultProps = {
+  tasksList: [],
 };
 
-TaskItem.propTypes = {
-  taskList: PropTypes.array,
+Task.propTypes = {
+  tasksList: PropTypes.array,
 };

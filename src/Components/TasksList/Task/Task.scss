@@ -1,10 +1,10 @@
-.taskItem{
+.task{
     display: flex;
     border: none;
     width: 100%;
     text-align: center;
 
-    &__deteleTaskButton, &__editTaskButton{
+    &__deleteButton, &__editButton{
         outline: none;
         border: none;
         background-color: #fff;
@@ -15,6 +15,6 @@
     }
 }
 
-.taskItem:focus{
+.task:focus{
     outline: none;
 }

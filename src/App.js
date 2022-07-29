@@ -1,79 +1,56 @@
-import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { Routes, Route, useNavigate } from "react-router-dom";
+
 import moment from "moment-timezone";
-import "moment-timezone";
+
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
-import TaskList from "./components/TaskList/TaskList";
+import TasksList from "./components/TasksList/TasksList";
 import AddTask from "./components/AddTask/AddTask";
 import EditTask from "./components/EditTask/EditTask";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
+
 import "./App.scss";
 
 function App() {
-  const [task, setTask] = useState({
-    id: null,
-    createdAt: null,
-    createdBy: "Ana",
-    title: "",
-    description: "",
-    priority: "",
-    completed: false,
-    completedAt: null,
-  });
-
-  const getTaskListFromLocalStorage = () => {
-    const savedList = localStorage.getItem("taskList");
-    const initialTaskList = JSON.parse(savedList);
-    return initialTaskList || [];
+  const getTasksListFromLocalStorage = () => {
+    const savedList = localStorage.getItem("tasksList");
+    const initialtasksList = JSON.parse(savedList);
+    return initialtasksList || [];
   };
 
-  const [taskList, setTaskList] = useState(getTaskListFromLocalStorage());
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentTaskItem, setCurrentTaskItem] = useState({});
+  const [tasksList, setTasksList] = useState(getTasksListFromLocalStorage());
+  const [currentTask, setCurrentTask] = useState({});
   const navigate = useNavigate();
 
-  const addNewTask = (title, description, priority) => {
-    const newTask = {
-      id: uuidv4(),
-      createdAt: moment().format("lll"),
-      createdBy: "Ana",
-      title: title,
-      description: description,
-      priority: priority,
-      completed: false,
-      completedAt: null,
-    };
-    setTaskList([...taskList, newTask]);
+  const addNewTask = (newTask) => {
+    setTasksList([...tasksList, newTask]);
   };
 
-  const editTask = (taskId, updatedTask) => {
-    const updatedList = taskList.map((task) => {
-      if (task.id === taskId) {
+  const updateTasksList = (updatedTask) => {
+    const updatedList = tasksList.map((task) => {
+      if (task.id === updatedTask.id) {
         task.title = updatedTask.title;
         task.description = updatedTask.description;
         task.priority = updatedTask.priority;
       }
       return task;
     });
-    setTaskList(updatedList);
-    setIsEditing(false);
+    setTasksList(updatedList);
     navigate("/task-list");
   };
 
   const deleteTask = (taskId) => {
-    setTaskList([...taskList.filter((task) => task.id !== taskId)]);
+    setTasksList([...tasksList.filter((task) => task.id !== taskId)]);
   };
 
   const handleEditClick = (task) => {
-    setIsEditing(true);
-    setCurrentTaskItem({ ...task });
+    setCurrentTask({ ...task });
     navigate("/edit-task/" + task.id);
   };
 
   const changeTaskStatus = (taskId) => {
-    setTaskList((prevState) =>
+    setTasksList((prevState) =>
       prevState.map((task) => {
         if (task.id === taskId) {
           return task.completed
@@ -90,8 +67,8 @@ function App() {
   };
 
   useEffect(() => {
-    localStorage.setItem("taskList", JSON.stringify(taskList));
-  }, [taskList]);
+    localStorage.setItem("tasksList", JSON.stringify(tasksList));
+  }, [tasksList]);
 
   return (
     <>
@@ -103,25 +80,15 @@ function App() {
           </div>
           <div className="task-manager__body__right-column">
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <AddTask
-                    task={task}
-                    setTask={setTask}
-                    addNewTask={addNewTask}
-                  />
-                }
-              />
+              <Route path="/" element={<AddTask addNewTask={addNewTask} />} />
               <Route
                 path="/task-list"
                 element={
-                  <TaskList
-                    taskList={taskList}
-                    setTaskList={setTaskList}
+                  <TasksList
+                    tasksList={tasksList}
+                    changeTaskStatus={changeTaskStatus}
                     handleEditClick={handleEditClick}
                     deleteTask={deleteTask}
-                    changeTaskStatus={changeTaskStatus}
                   />
                 }
               />
@@ -129,9 +96,9 @@ function App() {
                 path="/edit-task/:taskId"
                 element={
                   <EditTask
-                    currentTaskItem={currentTaskItem}
-                    setCurrentTaskItem={setCurrentTaskItem}
-                    editTask={editTask}
+                    currentTask={currentTask}
+                    setCurrentTask={setCurrentTask}
+                    updateTasksList={updateTasksList}
                   />
                 }
               />
