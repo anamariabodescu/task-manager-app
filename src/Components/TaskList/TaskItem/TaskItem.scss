@@ -1,0 +1,20 @@
+.taskItem{
+    display: flex;
+    border: none;
+    width: 100%;
+    text-align: center;
+
+    &__deteleTaskButton, &__editTaskButton{
+        outline: none;
+        border: none;
+        background-color: #fff;
+        float: right;
+        color: #333;
+        font-size: 16px;
+        cursor: pointer;
+    }
+}
+
+.taskItem:focus{
+    outline: none;
+}

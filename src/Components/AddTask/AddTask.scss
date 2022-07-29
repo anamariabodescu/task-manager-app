@@ -1,0 +1,29 @@
+.task-input-container{
+    display: flex;
+    &__input-text{
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dfdfdf;
+        margin: 0 10px;
+    }
+
+    &__submit-button{
+        background: transparent;
+        color: #5b5b5b;
+        text-transform: capitalize;
+        font-weight: 600;
+        margin-right: 10px;
+        border: none;
+        font-size: 20px;
+        display: flex;
+        align-self: center;
+        cursor: pointer;
+    }
+}
+
+.warning{
+    color: red;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Arial;
+}

@@ -1,0 +1,27 @@
+$content-width: 1200px;
+
+.task-manager {
+  text-align: center;
+
+  &__body{
+    display: flex;
+    align-items: center;
+    height: 90vh;
+    width: 100vw;
+    max-width: $content-width;
+    margin: auto;
+
+    &__left-column{
+      flex-grow: 1;
+      height: 50%;
+    }
+
+    &__right-column{
+      flex-grow: 4;
+    }
+  }
+}
+
+body {
+  margin: 0;
+}
