@@ -9,32 +9,48 @@ $list-border-color: #edeef2;
 $hover-bg-color: #fb4f83;
 $hover-text-color: #ffffff;
 
-.tasks-list{
-    background-color: $list-bg-color;
-    margin: 20px auto;
-    border-collapse: collapse;
-	border-radius: 10px;
-    box-shadow: 0 0 10px rgba(#000000, 0.02);
-    max-width: 700px;
-    
-    &__header {
-        background-color: $list-head-bg-color;
 
-        &__title{
-			font-weight: bold;
-			text-transform: capitalize;
+.tasks-list {
+    &__bars{
+        text-align: start;
+        padding: 0 120px;
+        &__search-bar{
+            margin: 10px 0;
+            &__search-input{
+                height: 20px;
+            }
+            &__search-btn{
+                height: 26px;
+            }
         }
-
-        th{
-            padding: 10px; ;
+        &__filter-bar{
+            margin: 10px 0;
         }
     }
 
-    &__row{
-		border-bottom: 1px solid $list-border-color;
-		padding: 0 1.5rem;
-        td {
-            padding: 10px;
+    &__table{
+        background-color: $list-bg-color;
+        margin: 20px auto;
+        border-collapse: collapse;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(#000000, 0.02);
+        max-width: 700px;
+        &__header {
+            background-color: $list-head-bg-color;
+            &__title{
+                font-weight: bold;
+                text-transform: capitalize;
+            }
+            th{
+                padding: 10px; ;
+            }
+        }
+        &__row{
+            border-bottom: 1px solid $list-border-color;
+            padding: 0 1.5rem;
+            td {
+                padding: 10px;
+            }
         }
     }
 }

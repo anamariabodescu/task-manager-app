@@ -24,7 +24,7 @@ export default function Task({
         ></input>
       </td>
 
-      <td>{task.compltetedAt}</td>
+      <td>{task.completedAt}</td>
 
       <td>
         <button

@@ -70,6 +70,7 @@ function App() {
     localStorage.setItem("tasksList", JSON.stringify(tasksList));
   }, [tasksList]);
 
+  console.log(tasksList);
   return (
     <>
       <div className="task-manager">
