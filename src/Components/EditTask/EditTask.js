@@ -1,30 +1,37 @@
 import React from "react";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 
 export default function EditTask({
-  currentTask,
-  setCurrentTask,
+  tasksList,
+  task,
+  setTask,
   updateTasksList,
 }) {
-  console.log(currentTask);
+  const { taskId } = useParams();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    updateTasksList(currentTask);
+    updateTasksList(task);
   };
 
   const handleInputChange = (e) => {
-    setCurrentTask({
-      ...currentTask,
+    setTask({
+      ...task,
       [e.target.name]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    setTask(tasksList.filter((task) => task.id === taskId)[0]);
+  }, []);
 
   return (
     <form className="task-form" onSubmit={handleFormSubmit}>
       <input
         type="text"
-        value={currentTask.title}
+        value={task.title}
         name="title"
         placeholder="Add title.."
         className="task-form__input-text"
@@ -32,7 +39,7 @@ export default function EditTask({
       ></input>
       <input
         type="text"
-        value={currentTask.description}
+        value={task.description}
         name="description"
         placeholder="Add description.."
         className="task-form__input-text"
@@ -41,7 +48,7 @@ export default function EditTask({
       <select
         name="priority"
         className="task-form__input-text"
-        value={currentTask.priority}
+        value={task.priority}
         onChange={handleInputChange}
       >
         <option value="1">High</option>
@@ -62,7 +69,8 @@ EditTask.defaultProps = {
 };
 
 EditTask.propTypes = {
-  currentTask: PropTypes.object,
-  setCurrentTask: PropTypes.func,
+  tasksList: PropTypes.array,
+  task: PropTypes.object,
+  setTask: PropTypes.func,
   updateTasksList: PropTypes.func,
 };

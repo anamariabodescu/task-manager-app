@@ -8,18 +8,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import "moment-timezone";
 import "./AddTask.scss";
 
-export default function AddTask({ addNewTask }) {
-  const [task, setTask] = useState({
-    id: null,
-    createdAt: null,
-    createdBy: "Ana",
-    title: "",
-    description: "",
-    priority: "",
-    completed: false,
-    completedAt: null,
-  });
-
+export default function AddTask({ task, setTask, addNewTask }) {
   const [warning, setWarning] = useState(false);
 
   const handleInputChange = (e) => {
@@ -44,7 +33,6 @@ export default function AddTask({ addNewTask }) {
       };
       setWarning(false);
       addNewTask(newTask);
-      setTask({ id: "", title: "", description: "", priority: "" });
     } else {
       setWarning(true);
     }
@@ -98,5 +86,7 @@ AddTask.defaultProps = {
 };
 
 AddTask.propTypes = {
+  task: PropTypes.object,
+  setTask: PropTypes.func,
   addNewTask: PropTypes.func,
 };

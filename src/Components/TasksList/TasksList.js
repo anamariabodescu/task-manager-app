@@ -23,7 +23,11 @@ export default function TasksList({
     if (e.target.value === "all") {
       setFilteredList(tasksList);
     } else {
-      e.target.value === "completed" ? setSearch(false) : setSearch(true);
+      if (e.target.value === "completed") {
+        setSearch(false);
+      } else {
+        setSearch(true);
+      }
       displayFilterResult();
     }
   };
@@ -61,7 +65,11 @@ export default function TasksList({
           </button>
         </div>
         <div className="tasks-list__bars__filter-bar">
-          <select name="filter-list" onChange={handleFilterChange}>
+          <select
+            name="filter-list"
+            onChange={handleFilterChange}
+            defaultValue="all"
+          >
             <option value="all">All</option>
             <option value="completed">Completed</option>
             <option value="uncompleted">Uncompleted</option>

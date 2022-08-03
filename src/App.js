@@ -20,7 +20,17 @@ function App() {
   };
 
   const [tasksList, setTasksList] = useState(getTasksListFromLocalStorage());
-  const [currentTask, setCurrentTask] = useState({});
+  const [task, setTask] = useState({
+    id: null,
+    createdAt: null,
+    createdBy: "Ana",
+    title: "",
+    description: "",
+    priority: "",
+    completed: false,
+    completedAt: null,
+  });
+
   const navigate = useNavigate();
 
   const addNewTask = (newTask) => {
@@ -45,7 +55,6 @@ function App() {
   };
 
   const handleEditClick = (task) => {
-    setCurrentTask({ ...task });
     navigate("/edit-task/" + task.id);
   };
 
@@ -81,7 +90,16 @@ function App() {
           </div>
           <div className="task-manager__body__right-column">
             <Routes>
-              <Route path="/" element={<AddTask addNewTask={addNewTask} />} />
+              <Route
+                path="/"
+                element={
+                  <AddTask
+                    task={task}
+                    setTask={setTask}
+                    addNewTask={addNewTask}
+                  />
+                }
+              />
               <Route
                 path="/task-list"
                 element={
@@ -97,8 +115,9 @@ function App() {
                 path="/edit-task/:taskId"
                 element={
                   <EditTask
-                    currentTask={currentTask}
-                    setCurrentTask={setCurrentTask}
+                    tasksList={tasksList}
+                    task={task}
+                    setTask={setTask}
                     updateTasksList={updateTasksList}
                   />
                 }
