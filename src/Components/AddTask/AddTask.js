@@ -33,6 +33,7 @@ export default function AddTask({ task, setTask, addNewTask }) {
       };
       setWarning(false);
       addNewTask(newTask);
+      setTask({ title: "", description: "", priority: "" });
     } else {
       setWarning(true);
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./Navbar.scss";
 
 export default function Navbar() {
@@ -7,10 +7,20 @@ export default function Navbar() {
     <>
       <ul className="navbar-list">
         <li className="navbar-list___list-item">
-          <Link to="task-list">Task List</Link>
+          <NavLink
+            to="task-list"
+            className={({ isActive }) => (isActive ? "activeLink" : undefined)}
+          >
+            Task List
+          </NavLink>
         </li>
         <li className="navbar-list___list-item">
-          <Link to="/">Create new task</Link>
+          <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? "activeLink" : undefined)}
+          >
+            Create new task
+          </NavLink>
         </li>
       </ul>
     </>

@@ -110,7 +110,7 @@ function App() {
                     deleteTask={deleteTask}
                   />
                 }
-              />
+              ></Route>
               <Route
                 path="/edit-task/:taskId"
                 element={
@@ -121,7 +121,7 @@ function App() {
                     updateTasksList={updateTasksList}
                   />
                 }
-              />
+              ></Route>
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </div>
