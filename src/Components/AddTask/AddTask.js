@@ -9,6 +9,8 @@ import "moment-timezone";
 import "./AddTask.scss";
 
 export default function AddTask({ task, setTask, addNewTask }) {
+
+  // [task, setTask]
   const [warning, setWarning] = useState(false);
 
   const handleInputChange = (e) => {

@@ -1,15 +1,23 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 
 export default function EditTask({
   tasksList,
-  task,
-  setTask,
+  task, // not needed {}
+  setTask, // not needed
   updateTasksList,
 }) {
   const { taskId } = useParams();
+  // [task, setTask] = useState(DEFAULT_TASK)
+
+  useEffect(() => {
+    if(taskId){
+      const currentTask = tasksList.find(task => task.id === taskId)
+      setTask(currentTask);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskId])
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -25,8 +33,9 @@ export default function EditTask({
 
   useEffect(() => {
     setTask(tasksList.filter((task) => task.id === taskId)[0]);
-  }, []);
+  }, []); // to be removed
 
+  // change form to div, add onClick pe buton
   return (
     <form className="task-form" onSubmit={handleFormSubmit}>
       <input
@@ -70,7 +79,7 @@ EditTask.defaultProps = {
 
 EditTask.propTypes = {
   tasksList: PropTypes.array,
-  task: PropTypes.object,
+  task: PropTypes.object, // {} define shape
   setTask: PropTypes.func,
   updateTasksList: PropTypes.func,
 };

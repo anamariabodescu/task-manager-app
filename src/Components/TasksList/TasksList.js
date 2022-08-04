@@ -1,18 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Task from "./Task/Task";
 import PropTypes from "prop-types";
 import { BsSearch } from "react-icons/bs";
 
 import "./TasksList.scss";
 
+
 export default function TasksList({
   tasksList,
-  handleEditClick,
-  deleteTask,
-  changeTaskStatus,
+  // setTaskList
+  handleEditClick, //
+  deleteTask, //
+  changeTaskStatus, //
 }) {
-  const [filteredList, setFilteredList] = useState(tasksList);
-  const [search, setSearch] = useState("");
+  const [filteredList, setFilteredList] = useState(tasksList); // not needed anymore
+  const [search, setSearch] = useState(""); //searchKeyword
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [statusFilter, setStatusFilter] = useState('all'); // all, completed, uncompleted
+
+  const onSearchKeywordChange = (e) => {
+    setSearchKeyword(e.target.value.toLowerCase());
+  }
+
+  const onStatusFilterChange = (e) => {
+    setStatusFilter(e.target.value);
+  }
+
+  // useEffect(() => {
+
+  // }, [searchKeyword])
 
   const handleSearch = (e) => {
     e.target.value ? setSearch(e.target.value) : setFilteredList(tasksList);
@@ -42,10 +58,38 @@ export default function TasksList({
     setFilteredList(filteredList);
   };
 
+  const searchFilterFunction = (task) => {
+    let isValid = true;
+
+    if (statusFilter !== 'all') {
+      if (statusFilter === 'uncompleted' && task.completed) {
+        isValid = false;
+      } else if (statusFilter === 'completed' && !task.completed) {
+        isValid = false;
+      } else {
+        isValid = true;
+      }
+    }
+
+    if (isValid) {
+      if (task.description.toLowerCase().includes(searchKeyword) ||
+        task.title.toLowerCase().includes(searchKeyword) ||
+        task.createdBy.toLowerCase().includes(searchKeyword)) {
+        isValid = true
+      } else {
+        isValid = false;
+      }
+    }
+
+    return isValid;
+  }
+
   const displayFilterResult = () => {
     const filteredList = tasksList.filter((task) => task.completed === search);
     setFilteredList(filteredList);
   };
+
+
 
   return (
     <div className="tasks-list">
@@ -55,7 +99,7 @@ export default function TasksList({
             type="text"
             placeholder="Serach.."
             className="tasks-list__bars__search-bar__search-input"
-            onChange={handleSearch}
+            onChange={onSearchKeywordChange}
           />
           <button
             className="tasks-list__bars__search-bar__search-btn"
@@ -67,7 +111,7 @@ export default function TasksList({
         <div className="tasks-list__bars__filter-bar">
           <select
             name="filter-list"
-            onChange={handleFilterChange}
+            onChange={onStatusFilterChange}
             defaultValue="all"
           >
             <option value="all">All</option>
@@ -91,7 +135,24 @@ export default function TasksList({
           </tr>
         </thead>
         <tbody className="tasks-list__table__body">
-          {filteredList.map((task) => {
+
+          {tasksList.filter(searchFilterFunction).map((task) => {
+            return (
+              <tr
+                key={task.id + "-" + task.title} // use literal strings please
+                className="tasks-list__table__row"
+              >
+                <Task
+                  task={task}
+                  handleEditClick={handleEditClick}
+                  deleteTask={deleteTask}
+                  changeTaskStatus={changeTaskStatus}
+                />
+              </tr>
+            );
+          })}
+
+          {/* {filteredList.map((task) => {
             return (
               <tr
                 key={task.id + "-" + task.title}
@@ -105,7 +166,7 @@ export default function TasksList({
                 />
               </tr>
             );
-          })}
+          })} */}
         </tbody>
       </table>
     </div>
