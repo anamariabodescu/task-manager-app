@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import PropTypes from "prop-types";
-import moment from "moment-timezone";
+import moment from "moment";
 
 import "./Task.scss";
 

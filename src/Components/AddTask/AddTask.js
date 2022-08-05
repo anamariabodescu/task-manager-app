@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
-import moment from "moment-timezone";
+import moment from "moment";
 
 import "./AddTask.scss";
 
