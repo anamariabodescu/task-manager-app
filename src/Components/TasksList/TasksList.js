@@ -1,50 +1,55 @@
 import { useState } from "react";
-import Task from "./Task/Task";
-import PropTypes from "prop-types";
 import { BsSearch } from "react-icons/bs";
+import PropTypes from "prop-types";
+
+import Task from "./Task/Task";
 
 import "./TasksList.scss";
 
-export default function TasksList({
-  tasksList,
-  handleEditClick,
-  deleteTask,
-  changeTaskStatus,
-}) {
-  const [filteredList, setFilteredList] = useState(tasksList);
-  const [search, setSearch] = useState("");
+const STATUS_FILTER = {
+  0: "all",
+  1: "completed",
+  2: "uncompleted",
+};
 
-  const handleSearch = (e) => {
-    e.target.value ? setSearch(e.target.value) : setFilteredList(tasksList);
+const TasksList = ({ tasksList, setTasksList }) => {
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+
+  const onSearchKeywordChange = (e) => {
+    setSearchKeyword(e.target.value.toLowerCase());
   };
 
-  const handleFilterChange = (e) => {
-    console.log(e.target.value);
-    if (e.target.value === "all") {
-      setFilteredList(tasksList);
-    } else {
-      if (e.target.value === "completed") {
-        setSearch(false);
+  const onStatusFilterChange = (e) => {
+    setStatusFilter(e.target.value);
+  };
+
+  const searchFilterFunction = (task) => {
+    let isValid = true;
+
+    if (statusFilter !== "all") {
+      if (statusFilter === "uncompleted" && task.completed) {
+        isValid = false;
+      } else if (statusFilter === "completed" && !task.completed) {
+        isValid = false;
       } else {
-        setSearch(true);
+        isValid = true;
       }
-      displayFilterResult();
     }
-  };
 
-  const displaySearchResult = () => {
-    const filteredList = tasksList.filter(
-      (task) =>
-        task.description.includes(search) ||
-        task.title.includes(search) ||
-        task.createdBy.includes(search)
-    );
-    setFilteredList(filteredList);
-  };
+    if (isValid) {
+      if (
+        task.description.toLowerCase().includes(searchKeyword) ||
+        task.title.toLowerCase().includes(searchKeyword) ||
+        task.createdBy.toLowerCase().includes(searchKeyword)
+      ) {
+        isValid = true;
+      } else {
+        isValid = false;
+      }
+    }
 
-  const displayFilterResult = () => {
-    const filteredList = tasksList.filter((task) => task.completed === search);
-    setFilteredList(filteredList);
+    return isValid;
   };
 
   return (
@@ -55,19 +60,16 @@ export default function TasksList({
             type="text"
             placeholder="Serach.."
             className="tasks-list__bars__search-bar__search-input"
-            onChange={handleSearch}
+            onChange={onSearchKeywordChange}
           />
-          <button
-            className="tasks-list__bars__search-bar__search-btn"
-            onClick={displaySearchResult}
-          >
+          <button className="tasks-list__bars__search-bar__search-btn">
             <BsSearch />
           </button>
         </div>
         <div className="tasks-list__bars__filter-bar">
           <select
             name="filter-list"
-            onChange={handleFilterChange}
+            onChange={onStatusFilterChange}
             defaultValue="all"
           >
             <option value="all">All</option>
@@ -91,17 +93,16 @@ export default function TasksList({
           </tr>
         </thead>
         <tbody className="tasks-list__table__body">
-          {filteredList.map((task) => {
+          {tasksList.filter(searchFilterFunction).map((task) => {
             return (
               <tr
-                key={task.id + "-" + task.title}
+                key={task.id + "-" + task.title} // use literal strings please
                 className="tasks-list__table__row"
               >
                 <Task
                   task={task}
-                  handleEditClick={handleEditClick}
-                  deleteTask={deleteTask}
-                  changeTaskStatus={changeTaskStatus}
+                  tasksList={tasksList}
+                  setTasksList={setTasksList}
                 />
               </tr>
             );
@@ -110,11 +111,11 @@ export default function TasksList({
       </table>
     </div>
   );
-}
+};
 
 Task.propTypes = {
   tasksList: PropTypes.array,
-  handleEditClick: PropTypes.func,
-  deleteTask: PropTypes.func,
-  changeTaskStatus: PropTypes.func,
+  setTasksList: PropTypes.func,
 };
+
+export default TasksList;

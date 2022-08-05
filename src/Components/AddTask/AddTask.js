@@ -1,14 +1,24 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-
-import { v4 as uuidv4 } from "uuid";
-import moment from "moment-timezone";
 import { FaPlusCircle } from "react-icons/fa";
+import { v4 as uuidv4 } from "uuid";
+import PropTypes from "prop-types";
+import moment from "moment-timezone";
 
-import "moment-timezone";
 import "./AddTask.scss";
 
-export default function AddTask({ task, setTask, addNewTask }) {
+const DEFAULT_TASK = {
+  id: null,
+  createAt: null,
+  createdBy: "Ana",
+  title: "",
+  description: "",
+  priority: "",
+  completed: false,
+  completedAt: null,
+};
+
+const AddTask = ({ tasksList, setTasksList }) => {
+  const [task, setTask] = useState(DEFAULT_TASK);
   const [warning, setWarning] = useState(false);
 
   const handleInputChange = (e) => {
@@ -18,8 +28,7 @@ export default function AddTask({ task, setTask, addNewTask }) {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (task.title && task.description && task.priority) {
       const newTask = {
         id: uuidv4(),
@@ -39,9 +48,13 @@ export default function AddTask({ task, setTask, addNewTask }) {
     }
   };
 
+  const addNewTask = (newTask) => {
+    setTasksList([...tasksList, newTask]);
+  };
+
   return (
     <>
-      <form className="task-form" onSubmit={handleSubmit}>
+      <div className="task-form">
         <input
           type="text"
           value={task.title}
@@ -69,25 +82,18 @@ export default function AddTask({ task, setTask, addNewTask }) {
           <option value="2">Medium</option>
           <option value="3">Low</option>
         </select>
-        <button className="task-form__submit-button">
+        <button className="task-form__submit-button" onClick={handleSubmit}>
           <FaPlusCircle />
         </button>
-      </form>
+      </div>
       {warning && <h3 className="warning">You must fill all the fields</h3>}
     </>
   );
-}
-
-AddTask.defaultProps = {
-  task: {
-    createdBy: "Ana",
-    completed: false,
-    completedAt: null,
-  },
 };
 
 AddTask.propTypes = {
-  task: PropTypes.object,
-  setTask: PropTypes.func,
-  addNewTask: PropTypes.func,
+  tasksList: PropTypes.array,
+  setTasksList: PropTypes.func,
 };
+
+export default AddTask;

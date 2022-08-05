@@ -1,13 +1,42 @@
-import PropTypes from "prop-types";
+import { useNavigate } from "react-router";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import PropTypes from "prop-types";
+import moment from "moment-timezone";
+
 import "./Task.scss";
 
-export default function Task({
-  task,
-  handleEditClick,
-  deleteTask,
-  changeTaskStatus,
-}) {
+const Task = ({ task, tasksList, setTasksList }) => {
+  const navigate = useNavigate();
+
+  const changeTaskStatus = (taskId) => {
+    if (taskId) {
+      const newTasksList = [...tasksList];
+      const currentTaskIndex = newTasksList.findIndex(
+        (task) => task.id === taskId
+      );
+      newTasksList[currentTaskIndex].completed =
+        !tasksList[currentTaskIndex].completed;
+      newTasksList[currentTaskIndex].completedAt = newTasksList[
+        currentTaskIndex
+      ].completed
+        ? moment().format("lll")
+        : "";
+      setTasksList(newTasksList);
+    }
+  };
+
+  const handleEditClick = (taskId) => {
+    if (taskId) {
+      navigate(`/edit-task/${taskId}`);
+    }
+  };
+
+  const deleteTask = (taskId) => {
+    if (taskId) {
+      setTasksList([...tasksList.filter((task) => task.id !== taskId)]);
+    }
+  };
+
   return (
     <>
       <td>{task.id}</td>
@@ -29,7 +58,7 @@ export default function Task({
       <td>
         <button
           className="task__editButton"
-          onClick={() => handleEditClick(task)}
+          onClick={() => handleEditClick(task.id)}
         >
           <FaEdit />
         </button>
@@ -44,7 +73,7 @@ export default function Task({
       </td>
     </>
   );
-}
+};
 
 Task.defaultProps = {
   task: {
@@ -53,8 +82,30 @@ Task.defaultProps = {
 };
 
 Task.propTypes = {
-  task: PropTypes.object,
-  handleEditClick: PropTypes.func,
-  deleteTask: PropTypes.func,
-  changeTaskStatus: PropTypes.func,
+  task: PropTypes.shape({
+    id: PropTypes.number,
+    createAt: PropTypes.instanceOf(Date),
+    createdBy: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    priority: PropTypes.number,
+    completed: PropTypes.bool,
+    completedAt: PropTypes.instanceOf(Date),
+  }),
+
+  tasksList: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      createAt: PropTypes.instanceOf(Date),
+      createdBy: PropTypes.string,
+      title: PropTypes.string,
+      description: PropTypes.string,
+      priority: PropTypes.number,
+      completed: PropTypes.bool,
+      completedAt: PropTypes.instanceOf(Date),
+    })
+  ),
+  setTasksList: PropTypes.func,
 };
+
+export default Task;

@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
-
-import moment from "moment-timezone";
+import { Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
@@ -12,74 +10,29 @@ import ErrorPage from "./components/ErrorPage/ErrorPage";
 
 import "./App.scss";
 
-function App() {
-  const getTasksListFromLocalStorage = () => {
-    const savedList = localStorage.getItem("tasksList");
-    const initialtasksList = JSON.parse(savedList);
-    return initialtasksList || [];
-  };
+const getTasksListFromLocalStorage = () => {
+  let savedList = [];
+  let initialTasksList = [];
+  if (localStorage) {
+    savedList = localStorage.getItem("tasksList");
+    try {
+      initialTasksList = JSON.parse(savedList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return initialTasksList;
+};
 
-  const [tasksList, setTasksList] = useState(getTasksListFromLocalStorage());
-  const [task, setTask] = useState({
-    id: null,
-    createdAt: null,
-    createdBy: "Ana",
-    title: "",
-    description: "",
-    priority: "",
-    completed: false,
-    completedAt: null,
-  });
+const INITIAL_TASKS_LIST = getTasksListFromLocalStorage();
 
-  const navigate = useNavigate();
-
-  const addNewTask = (newTask) => {
-    setTasksList([...tasksList, newTask]);
-  };
-
-  const updateTasksList = (updatedTask) => {
-    const updatedList = tasksList.map((task) => {
-      if (task.id === updatedTask.id) {
-        task.title = updatedTask.title;
-        task.description = updatedTask.description;
-        task.priority = updatedTask.priority;
-      }
-      return task;
-    });
-    setTasksList(updatedList);
-    navigate("/task-list");
-  };
-
-  const deleteTask = (taskId) => {
-    setTasksList([...tasksList.filter((task) => task.id !== taskId)]);
-  };
-
-  const handleEditClick = (task) => {
-    navigate("/edit-task/" + task.id);
-  };
-
-  const changeTaskStatus = (taskId) => {
-    setTasksList((prevState) =>
-      prevState.map((task) => {
-        if (task.id === taskId) {
-          return task.completed
-            ? { ...task, completed: false, completedAt: null }
-            : {
-                ...task,
-                completed: true,
-                completedAt: moment().format("lll"),
-              };
-        }
-        return task;
-      })
-    );
-  };
+const App = () => {
+  const [tasksList, setTasksList] = useState(INITIAL_TASKS_LIST);
 
   useEffect(() => {
     localStorage.setItem("tasksList", JSON.stringify(tasksList));
   }, [tasksList]);
 
-  console.log(tasksList);
   return (
     <>
       <div className="task-manager">
@@ -93,11 +46,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <AddTask
-                    task={task}
-                    setTask={setTask}
-                    addNewTask={addNewTask}
-                  />
+                  <AddTask tasksList={tasksList} setTasksList={setTasksList} />
                 }
               />
               <Route
@@ -105,21 +54,14 @@ function App() {
                 element={
                   <TasksList
                     tasksList={tasksList}
-                    changeTaskStatus={changeTaskStatus}
-                    handleEditClick={handleEditClick}
-                    deleteTask={deleteTask}
+                    setTasksList={setTasksList}
                   />
                 }
               ></Route>
               <Route
                 path="/edit-task/:taskId"
                 element={
-                  <EditTask
-                    tasksList={tasksList}
-                    task={task}
-                    setTask={setTask}
-                    updateTasksList={updateTasksList}
-                  />
+                  <EditTask tasksList={tasksList} setTasksList={setTasksList} />
                 }
               ></Route>
               <Route path="*" element={<ErrorPage />} />
@@ -129,6 +71,6 @@ function App() {
       </div>
     </>
   );
-}
+};
 
 export default App;

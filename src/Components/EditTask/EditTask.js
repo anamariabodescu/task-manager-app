@@ -1,18 +1,24 @@
-import React from "react";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-export default function EditTask({
-  tasksList,
-  task,
-  setTask,
-  updateTasksList,
-}) {
-  const { taskId } = useParams();
+const DEFAULT_TASK = {
+  id: null,
+  createAt: null,
+  createdBy: "Ana",
+  title: "",
+  description: "",
+  priority: "",
+  completed: false,
+  completedAt: null,
+};
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+const EditTask = ({ tasksList, setTasksList }) => {
+  const [task, setTask] = useState(DEFAULT_TASK);
+  const { taskId } = useParams();
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
     updateTasksList(task);
   };
 
@@ -23,12 +29,37 @@ export default function EditTask({
     });
   };
 
+  const updateTasksList = (updatedTask) => {
+    if (updatedTask) {
+      const updatedList = tasksList.map((task) => {
+        if (task.id === updatedTask.id) {
+          return {
+            id: task.id,
+            createdAt: task.createdAt,
+            createdBy: task.createdBy,
+            title: updatedTask.title,
+            description: updatedTask.description,
+            priority: updatedTask.priority,
+            completed: task.completed,
+            completedAt: task.completedAt,
+          };
+        }
+        return task;
+      });
+      setTasksList(updatedList);
+    }
+    navigate("/task-list");
+  };
+
   useEffect(() => {
-    setTask(tasksList.filter((task) => task.id === taskId)[0]);
-  }, []);
+    if (taskId) {
+      const currentTask = tasksList.find((task) => task.id === taskId);
+      setTask(currentTask);
+    }
+  }, [taskId, tasksList]);
 
   return (
-    <form className="task-form" onSubmit={handleFormSubmit}>
+    <div className="task-form">
       <input
         type="text"
         value={task.title}
@@ -55,22 +86,20 @@ export default function EditTask({
         <option value="2">Medium</option>
         <option value="3">Low</option>
       </select>
-      <button type="submit" className="task-form__submit-button">
+      <button
+        type="submit"
+        className="task-form__submit-button"
+        onClick={handleSubmit}
+      >
         Update
       </button>
-    </form>
+    </div>
   );
-}
-
-EditTask.defaultProps = {
-  task: {
-    createdBy: "Ana",
-  },
 };
 
 EditTask.propTypes = {
   tasksList: PropTypes.array,
-  task: PropTypes.object,
-  setTask: PropTypes.func,
-  updateTasksList: PropTypes.func,
+  setTasksList: PropTypes.func,
 };
+
+export default EditTask;
