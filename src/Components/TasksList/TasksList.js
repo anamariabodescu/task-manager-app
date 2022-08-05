@@ -6,7 +6,7 @@ import Task from "./Task/Task";
 
 import "./TasksList.scss";
 
-const STATUS_FILTER = {
+const STATUS_FILTER_DIC = {
   ALL: 0,
   COMPLETED: 1,
   UNCOMPLETED: 2,
@@ -14,7 +14,7 @@ const STATUS_FILTER = {
 
 const TasksList = ({ tasksList, setTasksList }) => {
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [statusFilter, setStatusFilter] = useState(STATUS_FILTER["ALL"]);
+  const [statusFilter, setStatusFilter] = useState(STATUS_FILTER_DIC["ALL"]);
 
   const onSearchKeywordChange = (e) => {
     setSearchKeyword(e.target.value.toLowerCase());
@@ -26,11 +26,11 @@ const TasksList = ({ tasksList, setTasksList }) => {
 
   const searchFilterFunction = (task) => {
     let isValid = true;
-    if (statusFilter !== STATUS_FILTER["ALL"]) {
-      if (statusFilter === STATUS_FILTER["UNCOMPLETED"] && task.completed) {
+    if (statusFilter !== STATUS_FILTER_DIC["ALL"]) {
+      if (statusFilter === STATUS_FILTER_DIC["UNCOMPLETED"] && task.completed) {
         isValid = false;
       } else if (
-        statusFilter === STATUS_FILTER["COMPLETED"] &&
+        statusFilter === STATUS_FILTER_DIC["COMPLETED"] &&
         !task.completed
       ) {
         isValid = false;
@@ -72,11 +72,13 @@ const TasksList = ({ tasksList, setTasksList }) => {
           <select
             name="filter-list"
             onChange={onStatusFilterChange}
-            defaultValue={STATUS_FILTER["ALL"]}
+            defaultValue={STATUS_FILTER_DIC["ALL"]}
           >
-            <option value={STATUS_FILTER["ALL"]}>All</option>
-            <option value={STATUS_FILTER["COMPLETED"]}>Completed</option>
-            <option value={STATUS_FILTER["UNCOMPLETED"]}>Uncompleted</option>
+            <option value={STATUS_FILTER_DIC["ALL"]}>All</option>
+            <option value={STATUS_FILTER_DIC["COMPLETED"]}>Completed</option>
+            <option value={STATUS_FILTER_DIC["UNCOMPLETED"]}>
+              Uncompleted
+            </option>
           </select>
         </div>
       </div>
