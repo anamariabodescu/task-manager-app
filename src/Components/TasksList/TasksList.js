@@ -25,33 +25,27 @@ const TasksList = ({ tasksList, setTasksList }) => {
   };
 
   const searchFilterFunction = (task) => {
-    let isValid = true;
-    if (statusFilter !== STATUS_FILTER_DIC["ALL"]) {
-      if (statusFilter === STATUS_FILTER_DIC["UNCOMPLETED"] && task.completed) {
-        isValid = false;
-      } else if (
-        statusFilter === STATUS_FILTER_DIC["COMPLETED"] &&
-        !task.completed
-      ) {
-        isValid = false;
-      } else {
-        isValid = true;
-      }
+    let filterFound = true;
+    let keywordFound = true;
+
+    if (statusFilter === STATUS_FILTER_DIC["UNCOMPLETED"] && task.completed) {
+      filterFound = false;
+    }
+    if (statusFilter === STATUS_FILTER_DIC["COMPLETED"] && !task.completed) {
+      filterFound = false;
     }
 
-    if (isValid) {
-      if (
-        task.description.toLowerCase().includes(searchKeyword) ||
-        task.title.toLowerCase().includes(searchKeyword) ||
-        task.createdBy.toLowerCase().includes(searchKeyword)
-      ) {
-        isValid = true;
-      } else {
-        isValid = false;
-      }
+    if (
+      task.description.toLowerCase().includes(searchKeyword) ||
+      task.title.toLowerCase().includes(searchKeyword) ||
+      task.createdBy.toLowerCase().includes(searchKeyword)
+    ) {
+      keywordFound = true;
+    } else {
+      keywordFound = false;
     }
 
-    return isValid;
+    return keywordFound && filterFound;
   };
 
   return (
