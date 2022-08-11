@@ -40,7 +40,7 @@ const Task = ({ task, tasksList, setTasksList }) => {
   return (
     <>
       <td>{task.id}</td>
-      <td>{task.createdAt}</td>
+      <td>{moment(task.createdAt).format("lll")}</td>
       <td>{task.createdBy}</td>
       <td>{task.title}</td>
       <td>{task.description}</td>

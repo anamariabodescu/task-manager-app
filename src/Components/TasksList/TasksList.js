@@ -94,7 +94,7 @@ const TasksList = ({ tasksList, setTasksList }) => {
           {tasksList.filter(searchFilterFunction).map((task) => {
             return (
               <tr
-                key={task.id + "-" + task.title} // use literal strings please
+                key={`${task.id}+${task.title}`}
                 className="tasks-list__table__row"
               >
                 <Task

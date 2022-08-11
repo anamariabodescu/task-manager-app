@@ -10,28 +10,34 @@ import ErrorPage from "./components/ErrorPage/ErrorPage";
 
 import "./App.scss";
 
-const getTasksListFromLocalStorage = () => {
-  let savedList = [];
-  let initialTasksList = [];
-  if (localStorage) {
-    savedList = localStorage.getItem("tasksList");
-    try {
-      initialTasksList = JSON.parse(savedList);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  return initialTasksList;
-};
-
-const INITIAL_TASKS_LIST = getTasksListFromLocalStorage();
-
 const App = () => {
-  const [tasksList, setTasksList] = useState(INITIAL_TASKS_LIST);
+  const [tasksList, setTasksList] = useState(null);
+  const [loading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem("tasksList", JSON.stringify(tasksList));
-  }, [tasksList]);
+    fetch("http://localhost:8000/tasks")
+      .then((response) => {
+        if (!response.ok) {
+          throw Error("Could not fetch the data for that resource.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setTasksList(data);
+        setIsLoading(false);
+        setError(null);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setIsLoading(false);
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem("tasksList", JSON.stringify(tasksList));
+  // }, [tasksList]);
 
   return (
     <>
@@ -42,6 +48,8 @@ const App = () => {
             <Navbar />
           </div>
           <div className="task-manager__body__right-column">
+            {error && <div>{error}</div>}
+            {loading && <div>Loading...</div>}
             <Routes>
               <Route
                 path="/"
@@ -52,12 +60,14 @@ const App = () => {
               <Route
                 path="/task-list"
                 element={
-                  <TasksList
-                    tasksList={tasksList}
-                    setTasksList={setTasksList}
-                  />
+                  tasksList && (
+                    <TasksList
+                      tasksList={tasksList}
+                      setTasksList={setTasksList}
+                    />
+                  )
                 }
-              ></Route>
+              />
               <Route
                 path="/edit-task/:taskId"
                 element={
