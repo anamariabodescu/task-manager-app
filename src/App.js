@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import useFetch from "./useFetch";
 
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
@@ -11,33 +12,14 @@ import ErrorPage from "./components/ErrorPage/ErrorPage";
 import "./App.scss";
 
 const App = () => {
-  const [tasksList, setTasksList] = useState(null);
-  const [loading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data, isLoading, error } = useFetch("http://localhost:8000/taskss");
+  const [tasksList, setTasksList] = useState(data);
 
+  // const [loading, setIsLoading] = useState(true);
+  // const [error, setError] = useState(null);
   useEffect(() => {
-    fetch("http://localhost:8000/tasks")
-      .then((response) => {
-        if (!response.ok) {
-          throw Error("Could not fetch the data for that resource.");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setTasksList(data);
-        setIsLoading(false);
-        setError(null);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setIsLoading(false);
-      });
-  }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem("tasksList", JSON.stringify(tasksList));
-  // }, [tasksList]);
+    setTasksList(data);
+  }, [data]);
 
   return (
     <>
@@ -49,7 +31,7 @@ const App = () => {
           </div>
           <div className="task-manager__body__right-column">
             {error && <div>{error}</div>}
-            {loading && <div>Loading...</div>}
+            {isLoading && <div>Loading...</div>}
             <Routes>
               <Route
                 path="/"
