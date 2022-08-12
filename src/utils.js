@@ -10,7 +10,7 @@ const request = ({ endpoint, method, data }) => {
 
 export const add = (data) => {
   request({
-    endpoint: "http://localhost:3000/tasks",
+    endpoint: "http://localhost:8000/tasks",
     method: "POST",
     data,
   });
@@ -18,15 +18,15 @@ export const add = (data) => {
 
 export const update = (task) => {
   request({
-    endpoint: `http://localhost:3000/pages/${task.id}`,
+    endpoint: `http://localhost:8000/tasks/${task.id}`,
     method: "PUT",
     data: task,
   });
 };
 
-export const remove = () => {
+export const remove = (taskId) => {
   request({
-    endpoint: `http://localhost:3000/tasks/${task.id}`,
+    endpoint: `http://localhost:8000/tasks/${taskId}`,
     method: "DELETE",
   });
 };

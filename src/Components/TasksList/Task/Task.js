@@ -2,13 +2,12 @@ import { useNavigate } from "react-router";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import PropTypes from "prop-types";
 import moment from "moment";
-
+import { getTasksList, updateTask, removeTask } from "../../../service";
 import "./Task.scss";
 
 const Task = ({ task, tasksList, setTasksList }) => {
   const navigate = useNavigate();
-
-  const changeTaskStatus = (taskId) => {
+  const updateTaskStatus = (taskId) => {
     if (taskId) {
       const newTasksList = [...tasksList];
       const currentTaskIndex = newTasksList.findIndex(
@@ -21,7 +20,10 @@ const Task = ({ task, tasksList, setTasksList }) => {
       ].completed
         ? moment().format("lll")
         : "";
-      setTasksList(newTasksList);
+
+      updateTask(newTasksList[currentTaskIndex])
+        .then(() => getTasksList())
+        .then((tasksList) => setTasksList(tasksList));
     }
   };
 
@@ -33,7 +35,9 @@ const Task = ({ task, tasksList, setTasksList }) => {
 
   const deleteTask = (taskId) => {
     if (taskId) {
-      setTasksList([...tasksList.filter((task) => task.id !== taskId)]);
+      removeTask(taskId)
+        .then(() => getTasksList())
+        .then((tasksList) => setTasksList(tasksList));
     }
   };
 
@@ -49,11 +53,11 @@ const Task = ({ task, tasksList, setTasksList }) => {
         <input
           type="checkbox"
           checked={task.completed}
-          onChange={() => changeTaskStatus(task.id)}
+          onChange={() => updateTaskStatus(task.id)}
         ></input>
       </td>
 
-      <td>{task.completedAt}</td>
+      <td>{task.completedAt && moment(task.completedAt).format("lll")}</td>
 
       <td>
         <button

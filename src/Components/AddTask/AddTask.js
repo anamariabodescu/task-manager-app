@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
 import moment from "moment";
 
+import { getTasksList, createTask } from "../../service";
+
 import "./AddTask.scss";
 
 const DEFAULT_TASK = {
@@ -41,15 +43,13 @@ const AddTask = ({ tasksList, setTasksList }) => {
         completedAt: null,
       };
       setWarning(false);
-      addNewTask(newTask);
+      createTask(newTask)
+        .then(() => getTasksList())
+        .then((tasksList) => setTasksList(tasksList));
       setTask({ title: "", description: "", priority: "" });
     } else {
       setWarning(true);
     }
-  };
-
-  const addNewTask = (newTask) => {
-    setTasksList([...tasksList, newTask]);
   };
 
   return (

@@ -1,25 +1,24 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import useFetch from "./useFetch";
-
 import Header from "./components/Header/Header";
 import Navbar from "./components/Navbar/Navbar";
 import TasksList from "./components/TasksList/TasksList";
 import AddTask from "./components/AddTask/AddTask";
 import EditTask from "./components/EditTask/EditTask";
 import ErrorPage from "./components/ErrorPage/ErrorPage";
-
 import "./App.scss";
+import { getTasksList } from "./service";
+
+const URL = "http://localhost:8000/tasks";
 
 const App = () => {
-  const { data, isLoading, error } = useFetch("http://localhost:8000/taskss");
-  const [tasksList, setTasksList] = useState(data);
+  const { data, isLoading, error } = useFetch(URL);
+  const [tasksList, setTasksList] = useState(null);
 
-  // const [loading, setIsLoading] = useState(true);
-  // const [error, setError] = useState(null);
   useEffect(() => {
-    setTasksList(data);
-  }, [data]);
+    getTasksList().then((tasksList) => setTasksList(tasksList));
+  }, []);
 
   return (
     <>

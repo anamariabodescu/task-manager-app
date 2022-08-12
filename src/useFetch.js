@@ -7,12 +7,7 @@ const useFetch = (url) => {
 
   useEffect(() => {
     fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw Error("Could not fetch the data for that resource.");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
         console.log(data);
         setData(data);

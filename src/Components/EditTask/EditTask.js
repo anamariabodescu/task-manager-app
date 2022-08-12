@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { getTasksList, updateTask } from "../../service";
 
 const DEFAULT_TASK = {
   id: null,
@@ -31,22 +32,9 @@ const EditTask = ({ tasksList, setTasksList }) => {
 
   const updateTasksList = (updatedTask) => {
     if (updatedTask) {
-      const updatedList = tasksList.map((task) => {
-        if (task.id === updatedTask.id) {
-          return {
-            id: task.id,
-            createdAt: task.createdAt,
-            createdBy: task.createdBy,
-            title: updatedTask.title,
-            description: updatedTask.description,
-            priority: updatedTask.priority,
-            completed: task.completed,
-            completedAt: task.completedAt,
-          };
-        }
-        return task;
-      });
-      setTasksList(updatedList);
+      updateTask(updatedTask)
+        .then(() => getTasksList())
+        .then((tasksList) => setTasksList(tasksList));
     }
     navigate("/task-list");
   };

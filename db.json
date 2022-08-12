@@ -1,34 +1,44 @@
 {
   "tasks": [
-      {
-          "id": 1,
-          "createAt": "7/10/2022",
-          "createdBy": "Ana",
-          "title": "Cleaning",
-          "description": "Cleaning the house",
-          "priority": 1,
-          "completed": false,
-          "completedAt": null
-      },
-      {
-          "id": 2,
-          "createAt": "7/10/2022",
-          "createdBy": "Ana",
-          "title": "Shopping",
-          "description": "Water, bread, apples",
-          "priority": 3,
-          "completed": true,
-          "completedAt": null
-      },
-      {
-          "id": 3,
-          "createAt": "8/10/2022",
-          "createdBy": "Ana",
-          "title": "Meal tickets",
-          "description": "Go to the office",
-          "priority": 2,
-          "completed": false,
-          "completedAt": null
-      }
+    {
+      "id": 1,
+      "createAt": "Aug 10, 2022 11:48 AM",
+      "createdBy": "Ana",
+      "title": "Cleaning",
+      "description": "Cleaning the house",
+      "priority": 1,
+      "completed": false,
+      "completedAt": ""
+    },
+    {
+      "id": 2,
+      "createAt": "Aug 10, 2022 14:12 PM",
+      "createdBy": "Ana",
+      "title": "Shopping",
+      "description": "Water, bread, apples",
+      "priority": 3,
+      "completed": true,
+      "completedAt": "Aug 12, 2022 4:42 PM"
+    },
+    {
+      "id": 3,
+      "createAt": "Aug 12, 2022 14:34 PM",
+      "createdBy": "Ana",
+      "title": "Meal tickets",
+      "description": "Go to the office",
+      "priority": 2,
+      "completed": true,
+      "completedAt": "Aug 12, 2022 4:43 PM"
+    },
+    {
+      "id": "b51b7f7f-0a46-43ec-a5a6-334d5b0f8325",
+      "createAt": "Aug 10, 2022 11:48 AM",
+      "createdBy": "Ana",
+      "title": "Cleaning",
+      "description": "Cleaning the house",
+      "priority": 1,
+      "completed": false,
+      "completedAt": ""
+    }
   ]
 }
