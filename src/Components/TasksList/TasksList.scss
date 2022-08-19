@@ -1,56 +1,6 @@
-$bg-color: #f2f6f9;
-$active-color: #25be64;
-$inactive-color: #dadde4;
-$new-color: #febf02;
-$text-color: #141a4e;
-$list-bg-color: #fefefe;
-$list-head-bg-color: #e1e8f2;
-$list-border-color: #edeef2;
-$hover-bg-color: #fb4f83;
-$hover-text-color: #ffffff;
-
-
-.tasks-list {
+.tasks-list{
     &__bars{
-        text-align: start;
-        padding: 0 120px;
-        &__search-bar{
-            margin: 10px 0;
-            &__search-input{
-                height: 20px;
-            }
-            &__search-btn{
-                height: 26px;
-            }
-        }
-        &__filter-bar{
-            margin: 10px 0;
-        }
-    }
-
-    &__table{
-        background-color: $list-bg-color;
-        margin: 20px auto;
-        border-collapse: collapse;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(#000000, 0.02);
-        max-width: 700px;
-        &__header {
-            background-color: $list-head-bg-color;
-            &__title{
-                font-weight: bold;
-                text-transform: capitalize;
-            }
-            th{
-                padding: 10px; ;
-            }
-        }
-        &__row{
-            border-bottom: 1px solid $list-border-color;
-            padding: 0 1.5rem;
-            td {
-                padding: 10px;
-            }
-        }
+        display: flex;
+        justify-content: space-between;
     }
 }

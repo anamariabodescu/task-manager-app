@@ -1,23 +1,11 @@
 .task-form{
     display: flex;
-    &__input-text{
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #dfdfdf;
-        margin: 0 10px;
+    flex-direction: column;
+    &__form-title{
+        text-align: center;
     }
-
     &__submit-button{
-        background: transparent;
-        color: #5b5b5b;
-        text-transform: capitalize;
-        font-weight: 600;
-        margin-right: 10px;
-        border: none;
-        font-size: 20px;
-        display: flex;
-        align-self: center;
-        cursor: pointer;
+        margin: 20px 0;
     }
 }
 

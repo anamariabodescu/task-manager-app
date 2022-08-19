@@ -1,15 +1,13 @@
 $content-width: 1200px;
 
 .task-manager {
-  text-align: center;
-
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   &__body{
-    display: flex;
-    align-items: center;
+
     height: 90vh;
     width: 100vw;
     max-width: $content-width;
-    margin: auto;
+    margin: 10% auto;
 
     &__left-column{
       flex-grow: 1;
@@ -17,7 +15,11 @@ $content-width: 1200px;
     }
 
     &__right-column{
+      justify-content: center;
+      display: flex;
       flex-grow: 4;
+      flex-direction: column;
+      align-items: center;
     }
   }
 }

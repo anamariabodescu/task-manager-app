@@ -5,13 +5,7 @@
     text-align: center;
 
     &__deleteButton, &__editButton{
-        outline: none;
-        border: none;
-        background-color: #fff;
-        float: right;
-        color: #333;
-        font-size: 16px;
-        cursor: pointer;
+        margin: 20px;
     }
 }
 

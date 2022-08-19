@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
 import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
 import moment from "moment";
-
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SendIcon from "@mui/icons-material/Send";
+import UserMessage from "../UserMeesage/UserMessage";
 import { getTasksList, createTask } from "../../service";
-
 import "./AddTask.scss";
 
 const DEFAULT_TASK = {
@@ -19,9 +24,26 @@ const DEFAULT_TASK = {
   completedAt: null,
 };
 
+const PRIORITIES = [
+  {
+    value: 0,
+    label: "High",
+  },
+  {
+    value: 1,
+    label: "Medium",
+  },
+  {
+    value: 2,
+    label: "Low",
+  },
+];
+
 const AddTask = ({ tasksList, setTasksList }) => {
   const [task, setTask] = useState(DEFAULT_TASK);
-  const [warning, setWarning] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [openAlert, setOpenAlert] = useState(true);
+  const [status, setStatus] = useState();
 
   const handleInputChange = (e) => {
     setTask({
@@ -31,6 +53,10 @@ const AddTask = ({ tasksList, setTasksList }) => {
   };
 
   const handleSubmit = () => {
+    setOpenAlert(true);
+    setLoading(true);
+    setStatus();
+
     if (task.title && task.description && task.priority) {
       const newTask = {
         id: uuidv4(),
@@ -42,51 +68,108 @@ const AddTask = ({ tasksList, setTasksList }) => {
         completed: false,
         completedAt: null,
       };
-      setWarning(false);
+
       createTask(newTask)
         .then(() => getTasksList())
-        .then((tasksList) => setTasksList(tasksList));
+        .then((tasksList) => setTasksList(tasksList))
+        .then(() => setStatus({ type: "success" }))
+        .then(() => setLoading(false))
+        .catch((error) => {
+          setOpenAlert(true);
+          setLoading(false);
+          setStatus({ type: "error" });
+        });
+
       setTask({ title: "", description: "", priority: "" });
     } else {
-      setWarning(true);
+      setStatus({ type: "warning" });
+      setLoading(false);
     }
   };
 
   return (
     <>
       <div className="task-form">
-        <input
-          type="text"
+        <h2 className="task-form__form-title">ADD NEW TASK</h2>
+
+        <TextField
+          label="Title"
+          required
           value={task.title}
           name="title"
-          placeholder="Add title.."
-          className="task-form__input-text"
           onChange={handleInputChange}
-        ></input>
-        <input
-          type="text"
+          className="task-form__input-text"
+          margin="normal"
+          multiline
+        />
+
+        <TextField
+          label="Description"
+          required
           value={task.description}
           name="description"
-          placeholder="Add description.."
-          className="task-form__input-text"
           onChange={handleInputChange}
-        ></input>
-        <select
-          name="priority"
           className="task-form__input-text"
-          value={task.priority}
-          onChange={handleInputChange}
+          margin="normal"
+          multiline
+        />
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="select-priority">Priority</InputLabel>
+          <Select
+            label="Priority"
+            labelId="select-priority"
+            value={task.priority}
+            name="priority"
+            onChange={handleInputChange}
+          >
+            {PRIORITIES.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <LoadingButton
+          className="task-form__submit-button"
+          onClick={handleSubmit}
+          loading={loading}
+          loadingPosition="end"
+          endIcon={<SendIcon />}
+          variant="contained"
+          margin="small"
         >
-          <option value="0">Select priority...</option>
-          <option value="1">High</option>
-          <option value="2">Medium</option>
-          <option value="3">Low</option>
-        </select>
-        <button className="task-form__submit-button" onClick={handleSubmit}>
-          <FaPlusCircle />
-        </button>
+          Add
+        </LoadingButton>
       </div>
-      {warning && <h3 className="warning">You must fill all the fields</h3>}
+
+      {status?.type === "warning" && (
+        <UserMessage
+          type={status.type}
+          message={"You must fill in all of the inputs"}
+          openAlert={openAlert}
+          setOpenAlert={setOpenAlert}
+        ></UserMessage>
+      )}
+
+      {status?.type === "success" && (
+        <UserMessage
+          type={status.type}
+          message={"Task successfully added"}
+          openAlert={openAlert}
+          setOpenAlert={setOpenAlert}
+        ></UserMessage>
+      )}
+
+      {status?.type === "error" && (
+        <UserMessage
+          type={status.type}
+          message={"Task couldn't be added"}
+          openAlert={openAlert}
+          setOpenAlert={setOpenAlert}
+        ></UserMessage>
+      )}
     </>
   );
 };
