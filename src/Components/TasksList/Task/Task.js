@@ -1,5 +1,8 @@
-import { useNavigate } from "react-router";
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
+import { removeTask, updateTask } from "../../../service";
+import { useDispatch } from "react-redux";
+import { deleteTask, changeTaskStatus } from "../../../redux/actionCreators";
 import PropTypes from "prop-types";
 import moment from "moment";
 import Button from "@mui/material/Button";
@@ -10,60 +13,36 @@ import EditIcon from "@mui/icons-material/Edit";
 import TableCell from "@mui/material/TableCell";
 import LoadingButton from "@mui/lab/LoadingButton";
 import UserMessage from "../../UserMeesage/UserMessage";
-import { getTasksList, updateTask, removeTask } from "../../../service";
 import "./Task.scss";
 
-const Task = ({ task, tasksList, setTasksList }) => {
+const Task = ({ task }) => {
   const [loading, setLoading] = useState(false);
   const [openAlert, setOpenAlert] = useState(true);
   const [status, setStatus] = useState();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const updateTaskStatus = (taskId) => {
-    setOpenAlert(true);
-    setLoading(true);
-    setStatus();
+  const updateTaskStatus = () => {
+    const newTask = task;
+    newTask.completed = !task.completed;
+    newTask.completedAt = task.completed ? moment().format("lll") : "";
+    updateTask(newTask).then(() => dispatch(changeTaskStatus(task)));
+  };
 
-    if (taskId) {
-      const newTasksList = [...tasksList];
-      const currentTaskIndex = newTasksList.findIndex(
-        (task) => task.id === taskId
-      );
-      newTasksList[currentTaskIndex].completed =
-        !tasksList[currentTaskIndex].completed;
-      newTasksList[currentTaskIndex].completedAt = newTasksList[
-        currentTaskIndex
-      ].completed
-        ? moment().format("lll")
-        : "";
-
-      updateTask(newTasksList[currentTaskIndex])
-        .then(() => getTasksList())
-        .then((tasksList) => setTasksList(tasksList))
-        .then(() => setLoading(false))
-        .catch(() => {
-          setStatus({ type: "error" });
-          setLoading(false);
-        });
+  const handleEditClick = () => {
+    if (task.id) {
+      navigate(`/edit-task/${task.id}`);
     }
   };
 
-  const handleEditClick = (taskId) => {
-    if (taskId) {
-      navigate(`/edit-task/${taskId}`);
-    }
-  };
-
-  const deleteTask = (taskId) => {
+  const handleDeleteClick = () => {
     setOpenAlert(true);
     setLoading(true);
     setStatus();
-
-    if (taskId) {
-      removeTask(taskId)
-        .then(() => getTasksList())
-        .then((tasksList) => setTasksList(tasksList))
+    if (task.id) {
+      removeTask(task.id)
+        .then(() => dispatch(deleteTask(task.id)))
         .then(() => setStatus({ type: "success" }))
         .then(() => setLoading(false))
         .catch(() => {
@@ -82,10 +61,7 @@ const Task = ({ task, tasksList, setTasksList }) => {
       <TableCell>{task.description}</TableCell>
       <TableCell>{task.priority}</TableCell>
       <TableCell>
-        <Checkbox
-          checked={task.completed}
-          onChange={() => updateTaskStatus(task.id)}
-        />
+        <Checkbox checked={task.completed} onChange={updateTaskStatus} />
       </TableCell>
       <TableCell>
         {task.completedAt && moment(task.completedAt).format("lll")}
@@ -95,7 +71,7 @@ const Task = ({ task, tasksList, setTasksList }) => {
           <Button
             variant="contained"
             endIcon={<EditIcon />}
-            onClick={() => handleEditClick(task.id)}
+            onClick={handleEditClick}
             size="small"
             className="task__editButton"
           >
@@ -104,7 +80,7 @@ const Task = ({ task, tasksList, setTasksList }) => {
           <LoadingButton
             variant="outlined"
             endIcon={<DeleteIcon />}
-            onClick={() => deleteTask(task.id)}
+            onClick={handleDeleteClick}
             size="small"
             className="task__deleteButton"
             loading={loading}

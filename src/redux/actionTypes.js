@@ -1,0 +1,5 @@
+export const LOAD_TASKS_LIST = "LOAD_TASKS_LIST";
+export const ADD_TASK = "ADD_TASK";
+export const DELETE_TASK = "DELETE_TASK";
+export const CHANGE_TASK_STATUS = "CHANGE_TASK_STATUS";
+export const FILTER_TASKS_BY_STATUS = "FILTER_TASKS_BY_STATUS";

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import { getTasksList, updateTask } from "../../service";
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import { useSelector } from "react-redux";
+import UserMessage from "../UserMeesage/UserMessage";
+import PropTypes from "prop-types";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import "./EditTask.scss";
 
 const DEFAULT_TASK = {
   id: null,
@@ -21,13 +24,29 @@ const DEFAULT_TASK = {
   completedAt: null,
 };
 
-const EditTask = ({ tasksList, setTasksList }) => {
+const PRIORITIES = [
+  {
+    value: 1,
+    label: "High",
+  },
+  {
+    value: 2,
+    label: "Medium",
+  },
+  {
+    value: 3,
+    label: "Low",
+  },
+];
+
+const EditTask = () => {
   const [task, setTask] = useState(DEFAULT_TASK);
   const [status, setStatus] = useState();
   const [openAlert, setOpenAlert] = useState(true);
   const [loading, setLoading] = useState(false);
   const { taskId } = useParams();
   const navigate = useNavigate();
+  const tasksList = useSelector((state) => state.tasksList);
 
   const handleSubmit = () => {
     setOpenAlert(true);
@@ -51,7 +70,6 @@ const EditTask = ({ tasksList, setTasksList }) => {
     if (updatedTask) {
       updateTask(updatedTask)
         .then(() => getTasksList())
-        .then((tasksList) => setTasksList(tasksList))
         .then(() => setStatus({ type: "success" }))
         .then(() => setLoading(false))
         .then(() => navigate("/task-list"))
@@ -64,42 +82,6 @@ const EditTask = ({ tasksList, setTasksList }) => {
       setOpenAlert(true);
       setStatus({ type: "error" });
     }
-  };
-  const handleClose = (event, reason) => {
-    setOpenAlert(false);
-  };
-
-  const action = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  const displayMeesageAlert = (type, message) => {
-    return (
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        action={action}
-      >
-        <Alert
-          multiple
-          onClose={handleClose}
-          severity={type}
-          sx={{ width: "100%" }}
-        >
-          {message}
-        </Alert>
-      </Snackbar>
-    );
   };
 
   useEffect(() => {
@@ -116,53 +98,46 @@ const EditTask = ({ tasksList, setTasksList }) => {
           <div className="task-form__title__edit-task">EDIT TASK:</div>
           <div className="task-form__title__task-id"> {task.id} </div>
         </div>
+
         <TextField
           required
           label="Title"
           variant="outlined"
-          value={task.title}
           name="title"
-          className="task-form__input-text"
+          value={task.title}
           onChange={handleInputChange}
+          className="task-form__input-text"
           margin="normal"
+          multiline
         />
         <TextField
-          required
-          multiline
-          type="text"
-          value={task.description}
-          name="description"
           label="Description"
-          className="task-form__input-text"
+          required
+          name="description"
+          value={task.description}
           onChange={handleInputChange}
+          className="task-form__input-text"
           margin="normal"
+          multiline
         />
-        {/* <input
-        type="text"
-        value={task.title}
-        name="title"
-        placeholder="Add title.."
-        className="task-form__input-text"
-        onChange={handleInputChange}
-      ></input>
-      <input
-        type="text"
-        value={task.description}
-        name="description"
-        placeholder="Add description.."
-        className="task-form__input-text"
-        onChange={handleInputChange}
-      ></input> */}
-        <select
-          name="priority"
-          className="task-form__input-text"
-          value={task.priority}
-          onChange={handleInputChange}
-        >
-          <option value="1">High</option>
-          <option value="2">Medium</option>
-          <option value="3">Low</option>
-        </select>
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="select-priority">Priority</InputLabel>
+          <Select
+            label="Priority"
+            labelId="select-priority"
+            value={task.priority}
+            name="priority"
+            onChange={handleInputChange}
+          >
+            {PRIORITIES.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <LoadingButton
           variant="contained"
           className="task-form__submit-button"
@@ -170,15 +145,37 @@ const EditTask = ({ tasksList, setTasksList }) => {
           endIcon={<SendIcon />}
           loading={loading}
           loadingPosition="end"
-          variant="contained"
+          margin="small"
         >
           Update
         </LoadingButton>
-        {status?.type === "warning" &&
-          displayMeesageAlert("warning", "You must fill in all of the inputs")}
 
-        {status?.type === "success" &&
-          displayMeesageAlert("success", "Task successfully added")}
+        {status?.type === "warning" && (
+          <UserMessage
+            type={status.type}
+            message={"You must fill in all of the inputs"}
+            openAlert={openAlert}
+            setOpenAlert={setOpenAlert}
+          ></UserMessage>
+        )}
+
+        {status?.type === "error" && (
+          <UserMessage
+            type={status.type}
+            message={"Task couldn't be updated"}
+            openAlert={openAlert}
+            setOpenAlert={setOpenAlert}
+          ></UserMessage>
+        )}
+
+        {status?.type === "success" && (
+          <UserMessage
+            type={status.type}
+            message={"Task successfully updated"}
+            openAlert={openAlert}
+            setOpenAlert={setOpenAlert}
+          ></UserMessage>
+        )}
       </div>
     </>
   );

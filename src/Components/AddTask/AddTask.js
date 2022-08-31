@@ -10,8 +10,11 @@ import MenuItem from "@mui/material/MenuItem";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
 import UserMessage from "../UserMeesage/UserMessage";
-import { getTasksList, createTask } from "../../service";
 import "./AddTask.scss";
+
+import { createTask } from "../../service";
+import { addTask } from "../../redux/actionCreators";
+import { useDispatch } from "react-redux";
 
 const DEFAULT_TASK = {
   id: null,
@@ -26,24 +29,26 @@ const DEFAULT_TASK = {
 
 const PRIORITIES = [
   {
-    value: 0,
+    value: 1,
     label: "High",
   },
   {
-    value: 1,
+    value: 2,
     label: "Medium",
   },
   {
-    value: 2,
+    value: 3,
     label: "Low",
   },
 ];
 
-const AddTask = ({ tasksList, setTasksList }) => {
+const AddTask = () => {
   const [task, setTask] = useState(DEFAULT_TASK);
   const [loading, setLoading] = useState(false);
   const [openAlert, setOpenAlert] = useState(true);
   const [status, setStatus] = useState();
+
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     setTask({
@@ -70,8 +75,7 @@ const AddTask = ({ tasksList, setTasksList }) => {
       };
 
       createTask(newTask)
-        .then(() => getTasksList())
-        .then((tasksList) => setTasksList(tasksList))
+        .then(() => dispatch(addTask(newTask)))
         .then(() => setStatus({ type: "success" }))
         .then(() => setLoading(false))
         .catch((error) => {
@@ -95,8 +99,8 @@ const AddTask = ({ tasksList, setTasksList }) => {
         <TextField
           label="Title"
           required
-          value={task.title}
           name="title"
+          value={task.title}
           onChange={handleInputChange}
           className="task-form__input-text"
           margin="normal"
@@ -106,8 +110,8 @@ const AddTask = ({ tasksList, setTasksList }) => {
         <TextField
           label="Description"
           required
-          value={task.description}
           name="description"
+          value={task.description}
           onChange={handleInputChange}
           className="task-form__input-text"
           margin="normal"
@@ -119,8 +123,8 @@ const AddTask = ({ tasksList, setTasksList }) => {
           <Select
             label="Priority"
             labelId="select-priority"
-            value={task.priority}
             name="priority"
+            value={task.priority}
             onChange={handleInputChange}
           >
             {PRIORITIES.map((item) => (

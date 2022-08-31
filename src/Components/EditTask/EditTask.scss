@@ -1,0 +1,17 @@
+.task-form{
+    display: flex;
+    flex-direction: column;
+    &__form-title{
+        text-align: center;
+    }
+    &__submit-button{
+        margin: 20px 0;
+    }
+}
+
+.warning{
+    color: red;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: Arial;
+}

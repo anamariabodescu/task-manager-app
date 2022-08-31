@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { loadTasksList, filterTasksByStatus } from "../../redux/actionCreators";
+import { getTasksList } from "../../service";
 import PropTypes from "prop-types";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
@@ -14,29 +17,48 @@ import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import Task from "./Task/Task";
 import "./TasksList.scss";
 
 const FILTERS = [
   {
     value: 0,
-    label: "All",
+    label: "ALL",
   },
   {
     value: 1,
-    label: "Completed",
+    label: "COMPLETED",
   },
   {
     value: 2,
-    label: "Uncompleted",
+    label: "UNCOMPLETED",
   },
 ];
 
-const TasksList = ({ tasksList, setTasksList }) => {
+const TasksList = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [statusFilter, setStatusFilter] = useState(FILTERS[0].value);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const dispatch = useDispatch();
+  const tasksList = useSelector((state) => state.tasksList);
+
+  useEffect(() => {
+    setLoading(true);
+    setError(false);
+    getTasksList()
+      .then((tasksList) => dispatch(loadTasksList(tasksList)))
+      .then(() => setLoading(false))
+      .catch(() => {
+        setLoading(false);
+        setError(true);
+      });
+  }, [dispatch]);
 
   const onSearchKeywordChange = (e) => {
     setSearchKeyword(e.target.value.toLowerCase());
@@ -78,6 +100,12 @@ const TasksList = ({ tasksList, setTasksList }) => {
 
   return (
     <div>
+      {loading && (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      )}
+      {error && <div>Tasks list fetch failed</div>}
       <div className="tasks-list__bars">
         <div className="tasks-list__bars__filter-bar">
           <FormControl fullWidth margin="normal">
@@ -86,7 +114,7 @@ const TasksList = ({ tasksList, setTasksList }) => {
               label="Filter"
               labelId="task-filter"
               name="priority"
-              defaultValue={statusFilter}
+              value={statusFilter ?? 0}
               onChange={onStatusFilterChange}
               size="small"
               sx={{ width: 160 }}
@@ -135,11 +163,7 @@ const TasksList = ({ tasksList, setTasksList }) => {
               .map((task) => {
                 return (
                   <TableRow hover key={`${task.id}+${task.title}`}>
-                    <Task
-                      task={task}
-                      tasksList={tasksList}
-                      setTasksList={setTasksList}
-                    />
+                    <Task task={task} />
                   </TableRow>
                 );
               })}
