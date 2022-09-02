@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { loadTasksList, filterTasksByStatus } from "../../redux/actionCreators";
+import { loadTasksList } from "../../redux/actionCreators";
 import { getTasksList } from "../../service";
+import { ThemeContext } from "../../context/ThemeContext";
 import PropTypes from "prop-types";
+
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -19,7 +21,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputBase from "@mui/material/InputBase";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+
 import Task from "./Task/Task";
+
 import "./TasksList.scss";
 
 const FILTERS = [
@@ -47,6 +51,37 @@ const TasksList = () => {
 
   const dispatch = useDispatch();
   const tasksList = useSelector((state) => state.tasksList);
+
+  const { darkMode } = useContext(ThemeContext);
+
+  const themeStyles = useMemo(() => {
+    return {
+      inputLabel: {
+        backgroundColor: darkMode ? "hsl(0,0%,10%)" : "hsl(0,0%,90%)",
+        color: darkMode ? "hsl(0,0%,70%)" : "hsl(0,0%,10%)",
+      },
+      filterSelector: {
+        backgroundColor: darkMode ? "hsl(0,0%,10%)" : "hsl(0,0%,90%)",
+        color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,10%)",
+        width: 180,
+      },
+      inputBase: {
+        ml: 1,
+        flex: 1,
+        color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,10%)",
+      },
+      searchButton: {
+        color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,10%)",
+      },
+      tabelCell: {
+        color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,10%)",
+        background: "none",
+      },
+      tabelPagination: {
+        color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,10%)",
+      },
+    };
+  }, [darkMode]);
 
   useEffect(() => {
     setLoading(true);
@@ -109,7 +144,9 @@ const TasksList = () => {
       <div className="tasks-list__bars">
         <div className="tasks-list__bars__filter-bar">
           <FormControl fullWidth margin="normal">
-            <InputLabel id="task-filter">Filter</InputLabel>
+            <InputLabel id="task-filter" sx={themeStyles.inputLabel}>
+              Filter
+            </InputLabel>
             <Select
               label="Filter"
               labelId="task-filter"
@@ -117,7 +154,7 @@ const TasksList = () => {
               value={statusFilter ?? 0}
               onChange={onStatusFilterChange}
               size="small"
-              sx={{ width: 160 }}
+              sx={themeStyles.filterSelector}
             >
               {FILTERS.map((item) => (
                 <MenuItem key={item.value} value={item.value}>
@@ -130,29 +167,32 @@ const TasksList = () => {
 
         <div className="tasks-list__bars__search-bar">
           <InputBase
-            sx={{ ml: 1, flex: 1 }}
+            sx={themeStyles.inputBase}
             onChange={onSearchKeywordChange}
             placeholder="Search task"
           />
-          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+          <IconButton
+            type="submit"
+            sx={themeStyles.searchButton}
+            aria-label="search"
+          >
             <SearchIcon />
           </IconButton>
         </div>
       </div>
-
-      <TableContainer sx={{ maxHeight: 840 }}>
+      <TableContainer sx={{ maxHeight: 640 }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Created At</TableCell>
-              <TableCell>Created By</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Priority</TableCell>
-              <TableCell>Completed</TableCell>
-              <TableCell>Completed At</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>ID</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Created At</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Created By</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Title</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Description</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Priority</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Completed</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Completed At</TableCell>
+              <TableCell sx={themeStyles.tabelCell}>Actions</TableCell>
             </TableRow>
           </TableHead>
 
@@ -179,6 +219,7 @@ const TasksList = () => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={themeStyles.tabelPagination}
       />
     </div>
   );

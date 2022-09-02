@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useMemo } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { removeTask, updateTask } from "../../../service";
-import { useDispatch } from "react-redux";
 import { deleteTask, changeTaskStatus } from "../../../redux/actionCreators";
+import { ThemeContext } from "../../../context/ThemeContext";
+
 import PropTypes from "prop-types";
 import moment from "moment";
 import Button from "@mui/material/Button";
@@ -13,6 +15,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import TableCell from "@mui/material/TableCell";
 import LoadingButton from "@mui/lab/LoadingButton";
 import UserMessage from "../../UserMeesage/UserMessage";
+
 import "./Task.scss";
 
 const Task = ({ task }) => {
@@ -22,6 +25,14 @@ const Task = ({ task }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { darkMode } = useContext(ThemeContext);
+
+  const themeStyles = useMemo(() => {
+    return {
+      color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,10%)",
+    };
+  }, [darkMode]);
 
   const updateTaskStatus = () => {
     const newTask = task;
@@ -54,16 +65,22 @@ const Task = ({ task }) => {
 
   return (
     <>
-      <TableCell>{task.id}</TableCell>
-      <TableCell>{moment(task.createdAt).format("lll")}</TableCell>
-      <TableCell>{task.createdBy}</TableCell>
-      <TableCell>{task.title}</TableCell>
-      <TableCell>{task.description}</TableCell>
-      <TableCell>{task.priority}</TableCell>
-      <TableCell>
-        <Checkbox checked={task.completed} onChange={updateTaskStatus} />
+      <TableCell sx={themeStyles}>{task.id}</TableCell>
+      <TableCell sx={themeStyles}>
+        {moment(task.createdAt).format("lll")}
       </TableCell>
+      <TableCell sx={themeStyles}>{task.createdBy}</TableCell>
+      <TableCell sx={themeStyles}>{task.title}</TableCell>
+      <TableCell sx={themeStyles}>{task.description}</TableCell>
+      <TableCell sx={themeStyles}>{task.priority}</TableCell>
       <TableCell>
+        <Checkbox
+          sx={themeStyles}
+          checked={task.completed}
+          onChange={updateTaskStatus}
+        />
+      </TableCell>
+      <TableCell sx={themeStyles}>
         {task.completedAt && moment(task.completedAt).format("lll")}
       </TableCell>
       <TableCell>

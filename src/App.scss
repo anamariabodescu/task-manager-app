@@ -3,11 +3,9 @@ $content-width: 1200px;
 .task-manager {
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   &__body{
-
-    height: 90vh;
-    width: 100vw;
-    max-width: $content-width;
-    margin: 10% auto;
+    margin: 0% auto;
+    padding-top: 10%;
+    height: 90vw;
 
     &__left-column{
       flex-grow: 1;
@@ -24,6 +22,13 @@ $content-width: 1200px;
   }
 }
 
-body {
-  margin: 0;
+.dark{
+  background-color: hsl(0,0%,10%);
+  color: hsl(0,0%,90%);
 }
+
+.light{
+  background-color: hsl(0,0%,90%);
+  color: hsl(0,0%,10%);;
+}
+

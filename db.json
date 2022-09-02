@@ -8,7 +8,7 @@
       "description": "a",
       "priority": "3",
       "completed": true,
-      "completedAt": "Aug 16, 2022 3:27 PM"
+      "completedAt": "Sep 1, 2022 4:40 PM"
     },
     {
       "id": "c77075aa-e196-4830-bbb2-040b07e6c8ea",
@@ -16,7 +16,7 @@
       "createdBy": "Ana",
       "title": "shop",
       "description": "water",
-      "priority": "2",
+      "priority": 3,
       "completed": false,
       "completedAt": ""
     },
@@ -37,18 +37,8 @@
       "title": "bb",
       "description": "bbbb",
       "priority": "2",
-      "completed": false,
-      "completedAt": ""
-    },
-    {
-      "id": "49dacabd-a90e-4983-ba24-39000f407773",
-      "createdAt": "Aug 24, 2022 2:02 PM",
-      "createdBy": "Ana",
-      "title": "buy",
-      "description": "water",
-      "priority": 1,
       "completed": true,
-      "completedAt": "Aug 24, 2022 2:07 PM"
+      "completedAt": "Sep 2, 2022 11:30 AM"
     },
     {
       "id": "d2595337-fe64-43bb-91f8-3cb2c28b9f9c",
@@ -87,6 +77,16 @@
       "title": "aaaaa",
       "description": "aaaaaaaa",
       "priority": 1,
+      "completed": false,
+      "completedAt": null
+    },
+    {
+      "id": "426870fe-85ce-43d9-ba29-9078bd741105",
+      "createdAt": "Sep 2, 2022 12:00 PM",
+      "createdBy": "Ana",
+      "title": "aa",
+      "description": "aa",
+      "priority": 3,
       "completed": false,
       "completedAt": null
     }

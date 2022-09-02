@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getTasksList, updateTask } from "../../service";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useSelector } from "react-redux";
-import UserMessage from "../UserMeesage/UserMessage";
+import { useParams, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+
+import { getTasksList, updateTask } from "../../service";
+import { ThemeContext } from "../../context/ThemeContext";
+
+import UserMessage from "../UserMeesage/UserMessage";
 import TextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SendIcon from "@mui/icons-material/Send";
@@ -11,6 +14,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+
 import "./EditTask.scss";
 
 const DEFAULT_TASK = {
@@ -44,9 +48,31 @@ const EditTask = () => {
   const [status, setStatus] = useState();
   const [openAlert, setOpenAlert] = useState(true);
   const [loading, setLoading] = useState(false);
+
   const { taskId } = useParams();
+  const { darkMode } = useContext(ThemeContext);
+
   const navigate = useNavigate();
   const tasksList = useSelector((state) => state.tasksList);
+
+  const themeStyles = useMemo(() => {
+    return {
+      textField: {
+        "& label": {
+          color: darkMode ? "hsl(0,0%,80%)" : "hsl(0,0%,10%)",
+        },
+        "& textArea": {
+          color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,0%)",
+        },
+      },
+      inputLabel: {
+        color: darkMode ? "hsl(0,0%,80%)" : "hsl(0,0%,10%)",
+      },
+      select: {
+        color: darkMode ? "hsl(0,0%,90%)" : "hsl(0,0%,0%)",
+      },
+    };
+  }, [darkMode]);
 
   const handleSubmit = () => {
     setOpenAlert(true);
@@ -100,6 +126,7 @@ const EditTask = () => {
         </div>
 
         <TextField
+          sx={themeStyles.textField}
           required
           label="Title"
           variant="outlined"
@@ -111,6 +138,7 @@ const EditTask = () => {
           multiline
         />
         <TextField
+          sx={themeStyles.textField}
           label="Description"
           required
           name="description"
@@ -122,13 +150,16 @@ const EditTask = () => {
         />
 
         <FormControl fullWidth margin="normal">
-          <InputLabel id="select-priority">Priority</InputLabel>
+          <InputLabel sx={themeStyles.inputLabel} id="select-priority">
+            Priority
+          </InputLabel>
           <Select
             label="Priority"
             labelId="select-priority"
             value={task.priority}
             name="priority"
             onChange={handleInputChange}
+            sx={themeStyles.select}
           >
             {PRIORITIES.map((item) => (
               <MenuItem key={item.value} value={item.value}>

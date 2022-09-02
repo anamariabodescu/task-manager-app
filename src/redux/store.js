@@ -8,7 +8,6 @@ import rootReducer from "./rootReducer";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const enhancer = composeEnhancers(applyMiddleware(thunk));
-//pass the reducer to the configure store
 
 export default function configureStore() {
   return createStore(rootReducer, enhancer);
